@@ -1,0 +1,255 @@
+@import '@fontsource/nunito/400.css';
+@import '@fontsource/nunito/600.css';
+@import '@fontsource/nunito/700.css';
+@import '@fontsource/nunito/800.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Warm, trustworthy palette for financial literacy */
+    --background: 40 33% 98%;
+    --foreground: 20 25% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 20 25% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 25% 15%;
+
+    /* Saffron/Orange - Trust, warmth, Indian aesthetic */
+    --primary: 28 85% 55%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 28 85% 65%;
+
+    /* Teal/Green - Growth, money, prosperity */
+    --secondary: 168 55% 45%;
+    --secondary-foreground: 0 0% 100%;
+
+    /* Cream/Warm neutral */
+    --muted: 40 30% 94%;
+    --muted-foreground: 20 15% 45%;
+
+    /* Accent - Soft gold */
+    --accent: 45 90% 55%;
+    --accent-foreground: 20 25% 15%;
+
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 40 20% 88%;
+    --input: 40 20% 88%;
+    --ring: 28 85% 55%;
+
+    --radius: 1rem;
+
+    /* Custom tokens */
+    --success: 145 60% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 20 25% 15%;
+    --info: 200 80% 50%;
+    --info-foreground: 0 0% 100%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(28, 85%, 55%) 0%, hsl(35, 90%, 60%) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(168, 55%, 45%) 0%, hsl(175, 60%, 50%) 100%);
+    --gradient-warm: linear-gradient(180deg, hsl(40, 33%, 98%) 0%, hsl(35, 40%, 95%) 100%);
+    --gradient-celebration: linear-gradient(135deg, hsl(45, 90%, 55%) 0%, hsl(28, 85%, 55%) 50%, hsl(340, 70%, 55%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0, 0%, 100%) 0%, hsl(40, 30%, 98%) 100%);
+
+    /* Shadows */
+    --shadow-soft: 0 4px 20px -4px hsl(28 85% 55% / 0.15);
+    --shadow-medium: 0 8px 30px -8px hsl(28 85% 55% / 0.2);
+    --shadow-card: 0 2px 12px -2px hsl(20 25% 15% / 0.08);
+    --shadow-elevated: 0 12px 40px -12px hsl(20 25% 15% / 0.15);
+
+    /* Sidebar */
+    --sidebar-background: 40 33% 98%;
+    --sidebar-foreground: 20 25% 15%;
+    --sidebar-primary: 28 85% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 40 30% 94%;
+    --sidebar-accent-foreground: 20 25% 15%;
+    --sidebar-border: 40 20% 88%;
+    --sidebar-ring: 28 85% 55%;
+  }
+
+  .dark {
+    --background: 20 20% 10%;
+    --foreground: 40 20% 95%;
+
+    --card: 20 18% 14%;
+    --card-foreground: 40 20% 95%;
+
+    --popover: 20 18% 14%;
+    --popover-foreground: 40 20% 95%;
+
+    --primary: 28 85% 55%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 28 85% 45%;
+
+    --secondary: 168 45% 40%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 20 15% 20%;
+    --muted-foreground: 40 15% 65%;
+
+    --accent: 45 80% 50%;
+    --accent-foreground: 20 25% 10%;
+
+    --destructive: 0 65% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 20 15% 22%;
+    --input: 20 15% 22%;
+    --ring: 28 85% 55%;
+
+    --success: 145 50% 40%;
+    --warning: 38 85% 45%;
+    --info: 200 70% 45%;
+
+    --gradient-primary: linear-gradient(135deg, hsl(28, 85%, 50%) 0%, hsl(35, 80%, 55%) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(168, 45%, 40%) 0%, hsl(175, 50%, 45%) 100%);
+    --gradient-warm: linear-gradient(180deg, hsl(20, 20%, 10%) 0%, hsl(20, 18%, 12%) 100%);
+
+    --shadow-soft: 0 4px 20px -4px hsl(0 0% 0% / 0.3);
+    --shadow-medium: 0 8px 30px -8px hsl(0 0% 0% / 0.4);
+    --shadow-card: 0 2px 12px -2px hsl(0 0% 0% / 0.2);
+    --shadow-elevated: 0 12px 40px -12px hsl(0 0% 0% / 0.4);
+
+    --sidebar-background: 20 18% 12%;
+    --sidebar-foreground: 40 20% 95%;
+    --sidebar-primary: 28 85% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 20 15% 18%;
+    --sidebar-accent-foreground: 40 20% 95%;
+    --sidebar-border: 20 15% 22%;
+    --sidebar-ring: 28 85% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    font-family: 'Nunito', system-ui, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    background: var(--gradient-warm);
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-card/80 backdrop-blur-md border border-border/50;
+    box-shadow: var(--shadow-card);
+  }
+
+  .elevated-card {
+    @apply bg-card rounded-2xl;
+    box-shadow: var(--shadow-elevated);
+  }
+
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+
+  .gradient-secondary {
+    background: var(--gradient-secondary);
+  }
+
+  .gradient-celebration {
+    background: var(--gradient-celebration);
+  }
+
+  .text-gradient-primary {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+
+  .shadow-medium {
+    box-shadow: var(--shadow-medium);
+  }
+
+  .touch-target {
+    @apply min-h-[48px] min-w-[48px];
+  }
+
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 16px);
+  }
+
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top, 16px);
+  }
+}
+
+@layer utilities {
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .animate-pulse-soft {
+    animation: pulse-soft 2s ease-in-out infinite;
+  }
+
+  .animate-bounce-soft {
+    animation: bounce-soft 1s ease-in-out;
+  }
+
+  .animate-celebrate {
+    animation: celebrate 0.6s ease-out;
+  }
+
+  .animate-shake {
+    animation: shake 0.5s ease-in-out;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  @keyframes pulse-soft {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(0.98); }
+  }
+
+  @keyframes bounce-soft {
+    0%, 100% { transform: translateY(0); }
+    25% { transform: translateY(-10px); }
+    50% { transform: translateY(0); }
+    75% { transform: translateY(-5px); }
+  }
+
+  @keyframes celebrate {
+    0% { transform: scale(1); }
+    25% { transform: scale(1.1) rotate(-3deg); }
+    50% { transform: scale(1.15) rotate(3deg); }
+    75% { transform: scale(1.1) rotate(-2deg); }
+    100% { transform: scale(1) rotate(0); }
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-4px); }
+    40% { transform: translateX(4px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+  }
+}
