@@ -16,6 +16,7 @@ import Simulations from "./pages/Simulations";
 import VoiceAssistant from "./pages/VoiceAssistant";
 import NotFound from "./pages/NotFound";
 import Livelihoods from "./pages/Livelihoods";
+import InvestmentGuide from "./pages/InvestmentGuide";
 import { FloatingChatbot } from "@/components/FloatingChatbot";
 
 const queryClient = new QueryClient();
@@ -38,7 +39,7 @@ const AppRoutes = () => {
       <Route path="/practice" element={<Dashboard />} />
       <Route path="/simulations" element={<Simulations />} />
       <Route path="/voice" element={<VoiceAssistant />} />
-      <Route path="/schemes" element={<Dashboard />} />
+      <Route path="/schemes" element={<InvestmentGuide />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

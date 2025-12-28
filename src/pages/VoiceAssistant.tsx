@@ -185,22 +185,11 @@ const VoiceAssistant = () => {
       
       setDebugInfo(`Error: ${error.message}`);
       
-      // Check if it's a rate limit error
-      const isRateLimit = error.message?.includes('Rate limit') || error.message?.includes('quota');
-      
-      let errorMessage = language === 'hi-IN' ? 
-        "क्षमा करें, मुझे प्रतिक्रिया देने में समस्या हो रही है। कृपया फिर से प्रयास करें।" :
+      const errorMessage = language === 'hi-IN' ? 
+        "क्षमा करें, मुझे प्रतिक्रिया देने में समस्या हो रही है। कृपया फिर से प्रयास करें या अपना इंटरनेट कनेक्शन जांचें।" :
         language === 'ta-IN' ? 
-        "மன்னிக்கவும், பதில் அளிப்பதில் சிக்கல் உள்ளது. தயவு செய்து மீண்டும் முயற்சிக்கவும்." :
-        "Sorry, I'm having trouble responding. Please try again.";
-      
-      if (isRateLimit) {
-        errorMessage = language === 'hi-IN' ? 
-          "क्षमा करें, बहुत सारे अनुरोध हो गए हैं। कृपया कुछ सेकंड प्रतीक्षा करें।" :
-          language === 'ta-IN' ? 
-          "மன்னிக்கவும், பல கோரிக்கைகள் வந்துள்ளன. சிறிது நேரம் காத்திருக்கவும்." :
-          "Sorry, too many requests. Please wait a moment and try again.";
-      }
+        "மன்னிக்கவும், பதில் அளிப்பதில் சிக்கல் உள்ளது. தயவு செய்து மீண்டும் முயற்சிக்கவும் அல்லது உங்கள் இணைய இணைப்பைச் சரிபார்க்கவும்." :
+        "Sorry, I'm having trouble responding. Please try again or check your internet connection.";
       
       setConversation(prev => [...prev, {
         id: `error-${Date.now()}`,
@@ -210,7 +199,7 @@ const VoiceAssistant = () => {
         error: true
       }]);
       
-      toast.error(error.message, { duration: 5000 });
+      toast.error('Failed to process request: ' + error.message);
     } finally {
       setIsProcessing(false);
       setDebugInfo('Ready for next input');
@@ -235,18 +224,13 @@ const VoiceAssistant = () => {
     
     toast.error(errorMessages[error as keyof typeof errorMessages] || errorMessages.default);
     
-    // Don't auto-restart on certain errors to prevent loops
-    const noRestartErrors = ['not-allowed', 'permission-denied', 'start-failed', 'network'];
-    if (autoListen && !noRestartErrors.includes(error)) {
-      // Only restart if not already listening or processing
+    // If auto-listen is on and we got an error, try to restart (except for permission errors)
+    if (autoListen && error !== 'not-allowed' && error !== 'permission-denied') {
       setTimeout(() => {
-        if (!isListening && !isProcessing && !isSpeaking) {
-          startVoiceInput();
-        }
+        startVoiceInput();
       }, 3000);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [autoListen, isListening, isProcessing, isSpeaking]);
+  }, [autoListen]);
 
   const startVoiceInput = useCallback(() => {
     console.log('🎤 Starting voice input...');
@@ -483,38 +467,6 @@ const VoiceAssistant = () => {
           </div>
         </div>
       </motion.header>
-
-      {/* Connection Status */}
-      {connectionStatus !== 'connected' && (
-        <Alert className={`mx-4 mt-4 ${connectionStatus === 'disconnected' ? 'bg-destructive/20 border-destructive/30' : 'bg-blue-500/20 border-blue-500/30'}`}>
-          {connectionStatus === 'checking' ? (
-            <div className="flex items-center gap-2">
-              <Loader2 className="h-4 w-4 animate-spin" />
-              <AlertDescription>
-                Checking AI service connection...
-              </AlertDescription>
-            </div>
-          ) : (
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <WifiOff className="h-4 w-4" />
-                <AlertDescription>
-                  AI service disconnected. Some features may not work.
-                </AlertDescription>
-              </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={retryConnection}
-                className="h-8 gap-1"
-              >
-                <RefreshCw className="h-3 w-3" />
-                Retry
-              </Button>
-            </div>
-          )}
-        </Alert>
-      )}
 
       {/* Debug Panel */}
       {debugInfo && (

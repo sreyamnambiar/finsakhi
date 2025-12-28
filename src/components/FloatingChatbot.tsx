@@ -58,8 +58,34 @@ export const FloatingChatbot = () => {
 
       setMessages(prev => [...prev, assistantMessage]);
     } catch (error) {
-      toast.error('Failed to get response. Please try again.');
-      console.error('Chat error:', error);
+      // Provide contextual fallback responses based on question
+      const question = input.trim().toLowerCase();
+      let fallbackContent = '';
+      
+      if (question.includes('atm')) {
+        fallbackContent = 'To use an ATM: 1) Insert your card 2) Enter your 4-digit PIN 3) Select "Withdrawal" 4) Choose amount 5) Take cash and card. Always cover the keypad when entering PIN and check for any suspicious devices on the ATM.';
+      } else if (question.includes('upi')) {
+        fallbackContent = 'UPI (Unified Payments Interface) lets you send money instantly using just a phone number or UPI ID. Popular apps include Google Pay, PhonePe, and Paytm. To use: 1) Download app 2) Link bank account 3) Create UPI PIN 4) Start sending money. It\'s free and instant!';
+      } else if (question.includes('save') || question.includes('saving')) {
+        fallbackContent = 'Smart saving tips: 1) Save at least 10% of your income 2) Open a savings account in a bank 3) Use Recurring Deposit (RD) for monthly savings 4) Try Public Provident Fund (PPF) for long-term 5) Keep emergency fund for 3-6 months expenses. Start small, stay consistent!';
+      } else if (question.includes('scheme') || question.includes('government')) {
+        fallbackContent = 'Government schemes for women: 1) Pradhan Mantri Jan Dhan Yojana (free bank account) 2) Sukanya Samriddhi Yojana (for daughters) 3) Mudra Loan (business loans up to ₹10 lakh) 4) Stand Up India (loans for women entrepreneurs). Visit your nearest bank to apply!';
+      } else if (question.includes('loan') || question.includes('borrow')) {
+        fallbackContent = 'Getting loans: 1) Check your eligibility 2) Compare interest rates 3) Read terms carefully 4) Keep documents ready (ID, income proof) 5) Consider government schemes like Mudra Loan. Never borrow from unofficial sources. Banks and government programs are safest.';
+      } else if (question.includes('account') || question.includes('bank')) {
+        fallbackContent = 'Opening a bank account: 1) Choose a nearby bank 2) Bring Aadhaar card and one photo 3) Fill simple form 4) Get passbook and debit card. Benefits: Your money is safe, you earn interest, can receive government benefits directly, and can do UPI payments!';
+      } else {
+        fallbackContent = 'FinSakhi is your financial friend! I can help you with: Banking basics, ATM usage, UPI payments, Saving tips, Government schemes, Loans, and Livelihood opportunities. Try asking specific questions like "How to open bank account?" or "What is UPI?"';
+      }
+      
+      const fallbackMessage: Message = {
+        id: uuidv4(),
+        role: 'assistant',
+        content: fallbackContent,
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, fallbackMessage]);
+      console.log('Using contextual fallback response');
     } finally {
       setIsLoading(false);
       inputRef.current?.focus();

@@ -1,5 +1,4 @@
 // @/lib/gemini.ts
-const apiKey = import.meta.env.VITE_GEMINI_API_KEY || "";
 
 export interface Message {
   id: string;
@@ -7,6 +6,10 @@ export interface Message {
   content: string;
   timestamp: Date;
 }
+
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY || "";
+
+let rateLimitedUntil: number | null = null; // ⛔ cooldown lock
 
 const SYSTEM_PROMPT = `You are FinSakhi — a friendly, knowledgeable financial companion for rural women in India.
 
@@ -19,42 +22,38 @@ IMPORTANT INSTRUCTIONS:
 6. Use examples that rural women can relate to
 7. Be encouraging and supportive
 
-Topics you can help with:
-- Banking basics (opening accounts, using ATMs)
-- UPI and digital payments
-- Savings schemes and investments
-- Government schemes for women
-- Loan information
-- Financial planning
-- Safety tips for digital transactions
-
 Always end with a helpful suggestion or next step.`;
 
 export class GeminiChatService {
   private apiKey: string;
-  private model = "gemini-1.5-flash"; // Use a valid model name
 
   constructor() {
     this.apiKey = apiKey;
     if (!this.apiKey) {
-      console.error("⚠️ Gemini API key is missing! Please add VITE_GEMINI_API_KEY to .env");
+      console.error("⚠️ Gemini API key missing");
     }
   }
 
   async sendMessage(message: string): Promise<string> {
     if (!this.apiKey) {
-      throw new Error("Gemini API key is not configured. Please check your .env file.");
+      throw new Error("Gemini API key not configured");
     }
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${this.model}:generateContent?key=${this.apiKey}`;
+    // ⛔ HARD STOP DURING RATE LIMIT
+    if (rateLimitedUntil && Date.now() < rateLimitedUntil) {
+      throw new Error("AI is cooling down. Please wait a few seconds.");
+    }
 
-    // Detect language for better response
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${this.apiKey}`;
+
     const isHindi = /[\u0900-\u097F]/.test(message);
     const isTamil = /[\u0B80-\u0BFF]/.test(message);
-    
-    const languageHint = isHindi ? "Respond in Hindi." : 
-                        isTamil ? "Respond in Tamil." : 
-                        "Respond in English.";
+
+    const languageHint = isHindi
+      ? "Respond in Hindi."
+      : isTamil
+      ? "Respond in Tamil."
+      : "Respond in English.";
 
     const body = {
       contents: [
@@ -66,9 +65,7 @@ export class GeminiChatService {
 
 ${languageHint}
 
-User's question: ${message}
-
-Please provide a helpful, detailed response in the appropriate language:`
+User question: ${message}`
             }
           ]
         }
@@ -76,99 +73,55 @@ Please provide a helpful, detailed response in the appropriate language:`
       generationConfig: {
         temperature: 0.7,
         topP: 0.8,
-        topK: 40,
-        maxOutputTokens: 1000
-      },
-      safetySettings: [
-        {
-          category: "HARM_CATEGORY_HARASSMENT",
-          threshold: "BLOCK_MEDIUM_AND_ABOVE"
-        },
-        {
-          category: "HARM_CATEGORY_HATE_SPEECH",
-          threshold: "BLOCK_MEDIUM_AND_ABOVE"
-        },
-        {
-          category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-          threshold: "BLOCK_MEDIUM_AND_ABOVE"
-        },
-        {
-          category: "HARM_CATEGORY_DANGEROUS_CONTENT",
-          threshold: "BLOCK_MEDIUM_AND_ABOVE"
-        }
-      ]
+        maxOutputTokens: 800
+      }
     };
 
     try {
-      console.log("🤖 Sending to Gemini:", message.substring(0, 100) + "...");
-      
       const response = await fetch(url, {
         method: "POST",
-        headers: { 
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
       });
 
       const data = await response.json();
-      
+
       if (!response.ok) {
-        console.error("❌ Gemini API error:", data);
-        
-        // Provide helpful error messages
-        if (response.status === 400) {
-          throw new Error("Invalid request to AI service. Please check your API key.");
-        } else if (response.status === 429) {
-          // Extract retry time from error message if available
-          const retryMatch = data.error?.message?.match(/(\d+\.\d+)s/);
-          const retrySeconds = retryMatch ? Math.ceil(parseFloat(retryMatch[1])) : 30;
-          throw new Error(`Rate limit exceeded. Please wait ${retrySeconds} seconds and try again.`);
-        } else if (response.status === 500) {
-          throw new Error("AI service is currently unavailable. Please try again later.");
-        } else {
-          throw new Error(`AI service error: ${data.error?.message || "Unknown error"}`);
+        // 🚨 RATE LIMIT HANDLING
+        if (response.status === 429) {
+          const retryMatch = data.error?.message?.match(/(\d+(\.\d+)?)s/);
+          const retrySeconds = retryMatch ? Math.ceil(Number(retryMatch[1])) : 30;
+
+          rateLimitedUntil = Date.now() + retrySeconds * 1000;
+          throw new Error(`Rate limit exceeded. Wait ${retrySeconds}s.`);
         }
+
+        throw new Error(data.error?.message || "Gemini error");
       }
 
       const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-      
+
       if (!text) {
-        console.error("❌ No text in response:", data);
-        throw new Error("AI response was empty. Please try again.");
+        throw new Error("Empty AI response");
       }
 
-      console.log("✅ Gemini response received");
       return text.trim();
 
     } catch (error: any) {
-      console.error("❌ Gemini fetch failed:", error);
-      
-      // Fallback responses in different languages
-      const isHindi = /[\u0900-\u097F]/.test(message);
-      const isTamil = /[\u0B80-\u0BFF]/.test(message);
-      
-      if (isHindi) {
-        return "माफ़ कीजिए, मुझे इस समय जवाब देने में समस्या हो रही है। कृपया थोड़ी देर बाद फिर से प्रयास करें। आप नीचे दिए गए सवालों में से किसी एक को ट्राई कर सकते हैं।";
-      } else if (isTamil) {
-        return "மன்னிக்கவும், இப்போது பதில் அளிப்பதில் சிக்கல் உள்ளது. தயவு செய்து சிறிது நேரம் கழித்து மீண்டும் முயற்சிக்கவும். கீழே உள்ள கேள்விகளில் ஒன்றை முயற்சி செய்யலாம்.";
-      } else {
-        return "I apologize, but I'm having trouble responding right now. Please try again in a moment. You can try one of the questions below.";
-      }
+      console.error("❌ Gemini error:", error.message);
+      throw error; // ⬅️ IMPORTANT: DO NOT SWALLOW ERROR
     }
   }
 }
 
 export const geminiChat = new GeminiChatService();
 
-// Test function to verify API works
-export const testGeminiConnection = async () => {
+// 🧪 Test connection and check quota
+export async function testGeminiConnection(): Promise<{ success: boolean; message: string }> {
   try {
-    const testMessage = "Hello, can you help me?";
-    const response = await geminiChat.sendMessage(testMessage);
-    console.log("✅ Gemini connection test successful:", response.substring(0, 100));
-    return { success: true, message: response.substring(0, 100) + "..." };
+    const response = await geminiChat.sendMessage("Test");
+    return { success: true, message: "Connected to Gemini AI" };
   } catch (error: any) {
-    console.error("❌ Gemini connection test failed:", error.message);
-    return { success: false, error: error.message };
+    return { success: false, message: error.message || "Connection failed" };
   }
-};
+}
