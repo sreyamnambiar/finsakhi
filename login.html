@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Finsakhi</title>
+    
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: none;
+            border: none;
+            color: #ff1493;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            transform: translateX(-5px);
+            color: #ff69b4;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 450px;
+            background: white;
+            border-radius: 25px;
+            padding: 50px 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .logo-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo-icon {
+            font-size: 50px;
+            color: #ff1493;
+            margin-bottom: 15px;
+        }
+
+        .logo-header h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 48px;
+            color: hsl(0, 15%, 71%);
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #ff1493, #ff69b4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        /* Login Steps */
+        .login-steps {
+            margin-bottom: 30px;
+        }
+
+        .step {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .step-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .step-dot.active {
+            background: #ff1493;
+            transform: scale(1.2);
+        }
+
+        /* Form Styles */
+        .input-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            color: #555;
+            margin-bottom: 8px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #ff1493;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(255, 20, 147, 0.1);
+        }
+
+        .input-icon {
+            position: absolute;
+            right: 15px;
+            top: 43px;
+            color: #888;
+        }
+
+        /* Country Code Select */
+        .phone-input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .country-code {
+            flex: 0 0 100px;
+        }
+
+        .country-code select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            background: #f8f9fa;
+            cursor: pointer;
+        }
+
+        .phone-number {
+            flex: 1;
+        }
+
+        /* OTP Input */
+        .otp-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .otp-input {
+            width: 60px;
+            height: 60px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+        .otp-input:focus {
+            outline: none;
+            border-color: #ff1493;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(255, 20, 147, 0.1);
+        }
+
+        .otp-input.filled {
+            border-color: #ff1493;
+            background: rgba(255, 20, 147, 0.05);
+        }
+
+        /* Timer */
+        .timer {
+            text-align: center;
+            margin: 20px 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .timer span {
+            color: #ff1493;
+            font-weight: 600;
+        }
+
+        .resend-otp {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .resend-btn {
+            background: none;
+            border: none;
+            color: #ff1493;
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .resend-btn:hover {
+            text-decoration: underline;
+        }
+
+        .resend-btn:disabled {
+            color: #999;
+            cursor: not-allowed;
+        }
+
+        /* Buttons */
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #ff1493 0%, #ff69b4 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 20, 147, 0.3);
+        }
+
+        .submit-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .send-otp-btn {
+            margin-top: 10px;
+        }
+
+        /* Signup Link */
+        .signup-link {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+        }
+
+        .signup-link a {
+            color: #ff1493;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 576px) {
+            .login-container {
+                padding: 40px 25px;
+            }
+            
+            .logo-header h1 {
+                font-size: 36px;
+            }
+            
+            .logo-icon {
+                font-size: 40px;
+            }
+            
+            .otp-input {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+            
+            .phone-input-group {
+                flex-direction: column;
+            }
+            
+            .country-code {
+                flex: 1;
+            }
+            
+            .submit-btn {
+                padding: 14px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="back-btn" onclick="handleBack()">
+        <i class="fas fa-arrow-left"></i> Back
+    </button>
+
+    <div class="login-container">
+        <div class="logo-header">
+            <i class="fas fa-piggy-bank logo-icon"></i>
+            <h1>Finsakhi</h1>
+            <p>Login with your phone number</p>
+        </div>
+
+        <div class="login-steps">
+            <!-- Step Indicator -->
+            <div class="step-indicator">
+                <div class="step-dot active" data-step="1"></div>
+                <div class="step-dot" data-step="2"></div>
+            </div>
+
+            <!-- Step 1: Enter Phone Number -->
+            <div class="step active" id="step1">
+                <div class="input-group">
+                    <label for="phone">
+                        <i class="fas fa-phone"></i> Phone Number
+                    </label>
+                    <div class="phone-input-group">
+                        <div class="country-code">
+                            <select id="countryCode">
+                                <option value="+91">+91 (India)</option>
+                                <option value="+1">+1 (USA)</option>
+                                <option value="+44">+44 (UK)</option>
+                                <option value="+61">+61 (Australia)</option>
+                                <option value="+65">+65 (Singapore)</option>
+                            </select>
+                        </div>
+                        <div class="phone-number">
+                            <input type="tel" id="phone" placeholder="Enter your phone number" required maxlength="10">
+                        </div>
+                    </div>
+                    <div class="input-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                </div>
+
+                <button class="submit-btn send-otp-btn" id="sendOtpBtn">
+                    <i class="fas fa-paper-plane"></i> Send OTP
+                </button>
+            </div>
+
+            <!-- Step 2: Enter OTP -->
+            <div class="step" id="step2">
+                <div class="input-group">
+                    <label>
+                        <i class="fas fa-shield-alt"></i> Enter OTP
+                    </label>
+                    <p style="color: hsl(0, 12%, 91%); margin-bottom: 15px; font-size: 14px;">
+                        Enter the 6-digit OTP sent to <span id="phoneDisplay"></span>
+                    </p>
+                    
+                    <div class="otp-container">
+                        <input type="text" class="otp-input" maxlength="1" data-index="0">
+                        <input type="text" class="otp-input" maxlength="1" data-index="1">
+                        <input type="text" class="otp-input" maxlength="1" data-index="2">
+                        <input type="text" class="otp-input" maxlength="1" data-index="3">
+                        <input type="text" class="otp-input" maxlength="1" data-index="4">
+                        <input type="text" class="otp-input" maxlength="1" data-index="5">
+                    </div>
+                </div>
+
+                <div class="timer">
+                    OTP expires in: <span id="countdown">02:00</span>
+                </div>
+
+                <div class="resend-otp">
+                    <button class="resend-btn" id="resendOtpBtn" disabled>
+                        Resend OTP
+                    </button>
+                </div>
+
+                <button class="submit-btn" id="verifyOtpBtn" disabled>
+                    <i class="fas fa-check-circle"></i> Verify OTP
+                </button>
+            </div>
+        </div>
+
+        <div class="signup-link">
+            <p>Don't have an account? <a href="signup.html">Sign up here</a></p>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const step1 = document.getElementById('step1');
+        const step2 = document.getElementById('step2');
+        const stepDots = document.querySelectorAll('.step-dot');
+        const phoneInput = document.getElementById('phone');
+        const countryCodeSelect = document.getElementById('countryCode');
+        const phoneDisplay = document.getElementById('phoneDisplay');
+        const sendOtpBtn = document.getElementById('sendOtpBtn');
+        const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+        const resendOtpBtn = document.getElementById('resendOtpBtn');
+        const countdownElement = document.getElementById('countdown');
+        const otpInputs = document.querySelectorAll('.otp-input');
+
+        let otp = '';
+        let countdownTimer;
+        let timeLeft = 120; // 2 minutes in seconds
+        let currentPhone = '';
+
+        // Format phone number input
+        phoneInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 10) value = value.substring(0, 10);
+            e.target.value = value;
+            
+            // Enable/disable send OTP button
+            sendOtpBtn.disabled = value.length !== 10;
+        });
+
+        // Send OTP
+        sendOtpBtn.addEventListener('click', function() {
+            const phoneNumber = phoneInput.value.trim();
+            const countryCode = countryCodeSelect.value;
+            const fullPhone = countryCode + phoneNumber;
+
+            if (phoneNumber.length !== 10) {
+                alert('Please enter a valid 10-digit phone number');
+                return;
+            }
+
+            // Store phone
+            currentPhone = fullPhone;
+
+            // Show loading
+            const originalText = sendOtpBtn.innerHTML;
+            sendOtpBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending OTP...';
+            sendOtpBtn.disabled = true;
+
+            // Simulate API call to send OTP
+            setTimeout(() => {
+                // Restore button
+                sendOtpBtn.innerHTML = originalText;
+                sendOtpBtn.disabled = false;
+
+                // Switch to OTP step
+                switchToStep(2);
+                
+                // Update phone display
+                phoneDisplay.textContent = fullPhone;
+                
+                // Start OTP timer
+                startOTPTimer();
+                
+                // Simulate receiving OTP (in real app, this comes via SMS)
+                const demoOTP = '123456'; // For demo purposes
+                alert(`Demo OTP sent to ${fullPhone}: ${demoOTP}\n\nIn production, this would come via SMS.`);
+                
+                // Auto-fill OTP for demo
+                setTimeout(() => {
+                    for (let i = 0; i < 6; i++) {
+                        otpInputs[i].value = demoOTP[i];
+                        otpInputs[i].classList.add('filled');
+                    }
+                    otp = demoOTP;
+                    verifyOtpBtn.disabled = false;
+                }, 500);
+            }, 1500);
+        });
+
+        // OTP input handling
+        otpInputs.forEach((input, index) => {
+            input.addEventListener('input', function(e) {
+                const value = e.target.value;
+                
+                // Only allow numbers
+                if (value && !/^\d$/.test(value)) {
+                    e.target.value = '';
+                    return;
+                }
+
+                // Update OTP string
+                updateOTP();
+                
+                // Move to next input
+                if (value && index < 5) {
+                    otpInputs[index + 1].focus();
+                }
+                
+                // Check if all inputs are filled
+                checkOTPCompletion();
+            });
+
+            input.addEventListener('keydown', function(e) {
+                // Handle backspace
+                if (e.key === 'Backspace' && !this.value && index > 0) {
+                    otpInputs[index - 1].focus();
+                }
+            });
+
+            input.addEventListener('paste', function(e) {
+                e.preventDefault();
+                const pasteData = e.clipboardData.getData('text').slice(0, 6);
+                if (/^\d{6}$/.test(pasteData)) {
+                    for (let i = 0; i < 6; i++) {
+                        otpInputs[i].value = pasteData[i];
+                        otpInputs[i].classList.add('filled');
+                    }
+                    otp = pasteData;
+                    verifyOtpBtn.disabled = false;
+                }
+            });
+        });
+
+        function updateOTP() {
+            otp = '';
+            otpInputs.forEach(input => {
+                otp += input.value;
+                if (input.value) {
+                    input.classList.add('filled');
+                } else {
+                    input.classList.remove('filled');
+                }
+            });
+        }
+
+        function checkOTPCompletion() {
+            const isComplete = otp.length === 6;
+            verifyOtpBtn.disabled = !isComplete;
+            return isComplete;
+        }
+
+        // Verify OTP - FIXED: Redirects to dashboard.html
+        verifyOtpBtn.addEventListener('click', function() {
+            if (otp.length !== 6) {
+                alert('Please enter the 6-digit OTP');
+                return;
+            }
+
+            // Show loading
+            const originalText = verifyOtpBtn.innerHTML;
+            verifyOtpBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+            verifyOtpBtn.disabled = true;
+
+            // Simulate OTP verification
+            setTimeout(() => {
+                // For demo, accept any 6-digit OTP
+                if (otp.length === 6) {
+                    // Successful verification
+                    clearInterval(countdownTimer);
+                    
+                    // Save user data to localStorage (as expected by dashboard)
+                    const userData = {
+                        name: "User", // In real app, get from API response
+                        phone: currentPhone,
+                        countryCode: countryCodeSelect.value
+                    };
+
+                    // Generate a mock token for authentication
+                    const token = 'mock_token_' + Date.now();
+
+                    // Save to localStorage
+                    localStorage.setItem('finsakhi_token', token);
+                    localStorage.setItem('finsakhi_user', JSON.stringify(userData));
+                    localStorage.setItem('finsakhi_language', 'en'); // Default language
+                    
+                    // Redirect to dashboard page
+                    window.location.href = 'dashboard.html';
+                } else {
+                    // Failed verification
+                    verifyOtpBtn.innerHTML = originalText;
+                    verifyOtpBtn.disabled = false;
+                    alert('Invalid OTP. Please try again.');
+                    
+                    // Clear OTP inputs
+                    otpInputs.forEach(input => {
+                        input.value = '';
+                        input.classList.remove('filled');
+                    });
+                    otp = '';
+                    otpInputs[0].focus();
+                }
+            }, 1500);
+        });
+
+        // Resend OTP
+        resendOtpBtn.addEventListener('click', function() {
+            const phoneNumber = phoneInput.value.trim();
+            const countryCode = countryCodeSelect.value;
+            const fullPhone = countryCode + phoneNumber;
+
+            // Reset timer
+            timeLeft = 120;
+            updateCountdownDisplay();
+            
+            // Disable resend button
+            resendOtpBtn.disabled = true;
+            resendOtpBtn.textContent = 'Resend OTP';
+
+            // Show loading
+            const originalText = resendOtpBtn.innerHTML;
+            resendOtpBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Resending...';
+
+            // Simulate resend OTP
+            setTimeout(() => {
+                // Restore button
+                resendOtpBtn.innerHTML = originalText;
+                
+                // Start timer
+                startOTPTimer();
+                
+                // Show success message
+                const demoOTP = '654321'; // New OTP for demo
+                alert(`New OTP sent to ${fullPhone}: ${demoOTP}`);
+                
+                // Clear previous OTP
+                otpInputs.forEach(input => {
+                    input.value = '';
+                    input.classList.remove('filled');
+                });
+                otp = '';
+                verifyOtpBtn.disabled = true;
+                otpInputs[0].focus();
+            }, 1500);
+        });
+
+        // Timer functions
+        function startOTPTimer() {
+            clearInterval(countdownTimer);
+            timeLeft = 120;
+            updateCountdownDisplay();
+            
+            countdownTimer = setInterval(() => {
+                timeLeft--;
+                updateCountdownDisplay();
+                
+                if (timeLeft <= 0) {
+                    clearInterval(countdownTimer);
+                    resendOtpBtn.disabled = false;
+                    countdownElement.textContent = '00:00';
+                }
+            }, 1000);
+        }
+
+        function updateCountdownDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            countdownElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Step switching
+        function switchToStep(stepNumber) {
+            // Hide all steps
+            step1.classList.remove('active');
+            step2.classList.remove('active');
+            
+            // Show selected step
+            if (stepNumber === 1) {
+                step1.classList.add('active');
+            } else if (stepNumber === 2) {
+                step2.classList.add('active');
+            }
+            
+            // Update step indicator
+            stepDots.forEach(dot => {
+                dot.classList.remove('active');
+                if (parseInt(dot.dataset.step) === stepNumber) {
+                    dot.classList.add('active');
+                }
+            });
+        }
+
+        // Back button handler
+        function handleBack() {
+            if (step2.classList.contains('active')) {
+                switchToStep(1);
+                clearInterval(countdownTimer);
+                resendOtpBtn.disabled = true;
+                resendOtpBtn.textContent = 'Resend OTP';
+            } else {
+                window.history.back();
+            }
+        }
+
+        // Auto-select India by default
+        window.addEventListener('load', function() {
+            countryCodeSelect.value = '+91';
+            phoneInput.focus();
+        });
+    </script>
+</body>
+</html>

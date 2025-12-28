@@ -3,25 +3,88 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- TODO: Set the document title to the name of your application -->
-    <title>Lovable App</title>
-    <meta name="description" content="Lovable Generated Project" />
-    <meta name="author" content="Lovable" />
+    <title>Finsakhi</title>
 
-    <!-- TODO: Update og:title to match your application name -->
-    <meta property="og:title" content="Lovable App" />
-    <meta property="og:description" content="Lovable Generated Project" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@Lovable" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      html,body { height: 100%; }
+      body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #ff1493 0%, #ff69b4 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+
+      .landing {
+        width: 100%;
+        max-width: 640px;
+        background: rgba(255,255,255,0.06);
+        border-radius: 28px;
+        padding: 48px 36px;
+        text-align: center;
+        backdrop-filter: blur(8px);
+        box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+        border: 1px solid rgba(255,255,255,0.12);
+      }
+
+      .logo {
+        font-family: 'Dancing Script', cursive;
+        font-size: 84px;
+        color: white;
+        text-shadow: 0 10px 30px rgba(0,0,0,0.25);
+        margin-bottom: 6px;
+      }
+
+      .tagline { color: rgba(255,255,255,0.9); margin-bottom: 28px; font-size: 18px; }
+
+      .cta { display: flex; gap: 16px; justify-content: center; margin-top: 18px; }
+      .btn {
+        padding: 16px 26px;
+        border-radius: 40px;
+        font-weight: 700;
+        font-size: 16px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        border: 2px solid transparent;
+        transition: transform .18s ease, box-shadow .18s ease;
+      }
+
+      .btn.login { background: white; color: #ff1493; }
+      .btn.login:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.18); }
+
+      .btn.signup { background: transparent; color: white; border-color: rgba(255,255,255,0.5); }
+      .btn.signup:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.12); }
+
+      .small-links { margin-top: 18px; color: rgba(255,255,255,0.85); font-size: 14px; }
+
+      @media (max-width: 520px) {
+        .logo { font-size: 62px; }
+        .landing { padding: 28px; }
+        .cta { flex-direction: column; }
+        .btn { width: 100%; justify-content: center; }
+      }
+    </style>
   </head>
 
   <body>
-    <div id="root"></div>
-    
-    <script type="module" src="/src/main.tsx"></script>
+    <div class="landing" role="main">
+      <div class="logo">FinSakhi</div>
+      <div class="tagline">Your smart financial companion — made for Indian women</div>
+
+      <div class="cta">
+        <a class="btn login" href="login.html"><i class="fas fa-sign-in-alt"></i> Login</a>
+        <a class="btn signup" href="signup.html"><i class="fas fa-user-plus"></i> Sign up</a>
+      </div>
+
+      <div class="small-links">Secure • Friendly • Localized</div>
+    </div>
   </body>
 </html>
