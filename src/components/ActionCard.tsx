@@ -13,10 +13,10 @@ interface ActionCardProps {
 }
 
 const variantStyles = {
-  primary: 'gradient-primary text-primary-foreground',
-  secondary: 'gradient-secondary text-secondary-foreground',
-  accent: 'bg-accent text-accent-foreground',
-  success: 'bg-success text-success-foreground',
+  primary: 'bg-gradient-to-br from-pink-500 to-rose-500 text-white shadow-pink-200',
+  secondary: 'bg-gradient-to-br from-purple-500 to-pink-500 text-white shadow-purple-200',
+  accent: 'bg-gradient-to-br from-rose-400 to-pink-400 text-white shadow-rose-200',
+  success: 'bg-gradient-to-br from-fuchsia-500 to-pink-500 text-white shadow-fuchsia-200',
 };
 
 export const ActionCard = ({
@@ -32,23 +32,23 @@ export const ActionCard = ({
     <motion.button
       onClick={onClick}
       className={cn(
-        'w-full p-5 rounded-2xl text-left transition-all duration-300 shadow-card hover:shadow-elevated active:scale-[0.98]',
+        'w-full p-6 rounded-2xl text-left transition-all duration-300 shadow-xl hover:shadow-2xl active:scale-[0.98]',
         variantStyles[variant],
         className
       )}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay, duration: 0.4, ease: 'easeOut' }}
-      whileHover={{ y: -2 }}
+      whileHover={{ y: -4, scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
     >
       <div className="flex items-start gap-4">
-        <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-card/20 backdrop-blur-sm flex items-center justify-center">
-          <Icon className="w-6 h-6" />
+        <div className="flex-shrink-0 w-14 h-14 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+          <Icon className="w-7 h-7" />
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="font-bold text-lg leading-tight">{title}</h3>
-          <p className="text-sm opacity-90 mt-1 leading-snug">{description}</p>
+          <h3 className="font-bold text-lg leading-tight mb-1">{title}</h3>
+          <p className="text-sm opacity-90 leading-snug">{description}</p>
         </div>
       </div>
     </motion.button>

@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { MessageCircle, BookOpen, Smartphone, CreditCard, FileText, Trophy } from 'lucide-react';
+import { BookOpen, Smartphone, FileText, Mic, Trophy, Briefcase } from 'lucide-react';
 import { FinSakhiMascot } from '@/components/FinSakhiMascot';
 import { StatsBar } from '@/components/StatsBar';
 import { ActionCard } from '@/components/ActionCard';
@@ -19,57 +19,76 @@ const Dashboard = () => {
   }, [updateStreak]);
 
   return (
-    <div className="min-h-screen pb-24">
+    <div className="min-h-screen pb-24 bg-gradient-to-br from-pink-50 via-rose-50 to-purple-50">
       {/* Header */}
       <motion.header
-        className="px-5 pt-6 pb-4"
+        className="px-6 pt-8 pb-6"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
       >
         <div className="flex items-center gap-4">
           <FinSakhiMascot size="sm" />
           <div>
-            <h1 className="text-2xl font-bold text-foreground">{t('dashboard.greeting')}</h1>
-            <p className="text-muted-foreground">{t('app.tagline')}</p>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
+              {t('dashboard.greeting')}
+            </h1>
+            <p className="text-gray-600 text-sm mt-1">{t('app.tagline')}</p>
           </div>
         </div>
       </motion.header>
 
       {/* Stats */}
-      <div className="px-5 mb-6">
+      <div className="px-6 mb-8">
         <StatsBar />
       </div>
 
       {/* Daily Goal */}
       <motion.div
-        className="mx-5 mb-6 p-4 rounded-2xl glass-card"
+        className="mx-6 mb-8 p-5 rounded-3xl bg-white shadow-lg border border-pink-100"
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.2 }}
       >
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium text-muted-foreground">{t('dashboard.dailyGoal')}</p>
-            <p className="font-bold text-foreground">{t('dashboard.goalText')}</p>
-          </div>
-          <div className="text-3xl">🎯</div>
+        <div>
+          <p className="text-sm font-semibold text-pink-600 mb-1">{t('dashboard.dailyGoal')}</p>
+          <p className="font-bold text-gray-800 text-lg">{t('dashboard.goalText')}</p>
         </div>
       </motion.div>
 
       {/* Action Cards */}
-      <div className="px-5 space-y-4">
-        <h2 className="font-bold text-lg text-foreground mb-3">{t('dashboard.nextStep')}</h2>
+      <div className="px-6 space-y-5">
+        <h2 className="font-bold text-xl text-gray-800 mb-4">{t('dashboard.nextStep')}</h2>
         
-        <ActionCard
-          title={t('dashboard.talkToFinSakhi')}
-          description={t('dashboard.talkDesc')}
-          icon={MessageCircle}
-          variant="primary"
-          onClick={() => navigate('/tutor')}
-          delay={0.3}
-        />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <ActionCard
+            title="Voice Assistant"
+            description="Talk to FinSakhi with your voice"
+            icon={Mic}
+            variant="primary"
+            onClick={() => navigate('/voice')}
+            delay={0.25}
+          />
+          
+          <ActionCard
+            title="Quiz & Rewards"
+            description="Test knowledge, earn badges"
+            icon={Trophy}
+            variant="primary"
+            onClick={() => navigate('/quiz')}
+            delay={0.3}
+          />
+
+          <ActionCard
+            title="Livelihood Match"
+            description="Find work that fits your skills"
+            icon={Briefcase}
+            variant="primary"
+            onClick={() => navigate('/livelihoods')}
+            delay={0.35}
+          />
+        </div>
         
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           <ActionCard
             title={t('dashboard.learnLessons')}
             description={t('dashboard.learnDesc')}
@@ -86,9 +105,6 @@ const Dashboard = () => {
             onClick={() => navigate('/simulations')}
             delay={0.5}
           />
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
           <ActionCard
             title={t('dashboard.govtSchemes')}
             description={t('dashboard.schemesDesc')}
@@ -96,14 +112,6 @@ const Dashboard = () => {
             variant="success"
             onClick={() => navigate('/schemes')}
             delay={0.6}
-          />
-          <ActionCard
-            title={t('dashboard.quiz')}
-            description={t('dashboard.quizDesc')}
-            icon={Trophy}
-            variant="primary"
-            onClick={() => navigate('/learn')}
-            delay={0.7}
           />
         </div>
       </div>

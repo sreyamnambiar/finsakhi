@@ -2,17 +2,20 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useAppStore } from "@/store/useAppStore";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import "@/lib/i18n";
 
-import Onboarding from "./pages/Onboarding";
 import Dashboard from "./pages/Dashboard";
+import Learn from "./pages/Learn";
+import CourseDetail from "./pages/CourseDetail";
+import Quiz from "./pages/Quiz";
 import Simulations from "./pages/Simulations";
-import Tutor from "./pages/Tutor";
+import VoiceAssistant from "./pages/VoiceAssistant";
 import NotFound from "./pages/NotFound";
+import Livelihoods from "./pages/Livelihoods";
 import { FloatingChatbot } from "@/components/FloatingChatbot";
 
 const queryClient = new QueryClient();
@@ -25,22 +28,17 @@ const AppRoutes = () => {
     i18n.changeLanguage(settings.language);
   }, [settings.language, i18n]);
 
-  if (!settings.hasCompletedOnboarding) {
-    return (
-      <Routes>
-        <Route path="*" element={<Onboarding />} />
-      </Routes>
-    );
-  }
-
   return (
     <Routes>
       <Route path="/" element={<Dashboard />} />
-      <Route path="/learn" element={<Dashboard />} />
+      <Route path="/learn" element={<Learn />} />
+      <Route path="/learn/:courseId" element={<CourseDetail />} />
+      <Route path="/quiz" element={<Quiz />} />
+      <Route path="/livelihoods" element={<Livelihoods />} />
       <Route path="/practice" element={<Dashboard />} />
       <Route path="/simulations" element={<Simulations />} />
+      <Route path="/voice" element={<VoiceAssistant />} />
       <Route path="/schemes" element={<Dashboard />} />
-      <Route path="/tutor" element={<Tutor />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

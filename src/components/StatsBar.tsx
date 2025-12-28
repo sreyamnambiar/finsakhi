@@ -12,28 +12,28 @@ export const StatsBar = () => {
       icon: Flame,
       value: progress.streak,
       label: t('dashboard.streak'),
-      color: 'text-primary',
-      bgColor: 'bg-primary/10',
+      color: 'text-rose-600',
+      bgColor: 'bg-rose-100',
     },
     {
       icon: Zap,
       value: progress.xp,
       label: t('dashboard.xp'),
-      color: 'text-accent',
-      bgColor: 'bg-accent/10',
+      color: 'text-pink-600',
+      bgColor: 'bg-pink-100',
     },
     {
       icon: Star,
       value: progress.level,
       label: t('dashboard.level'),
-      color: 'text-secondary',
-      bgColor: 'bg-secondary/10',
+      color: 'text-purple-600',
+      bgColor: 'bg-purple-100',
     },
   ];
 
   return (
     <motion.div
-      className="grid grid-cols-3 gap-3"
+      className="grid grid-cols-3 gap-4"
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
@@ -41,16 +41,16 @@ export const StatsBar = () => {
       {stats.map((stat, index) => (
         <motion.div
           key={stat.label}
-          className="glass-card rounded-2xl p-4 text-center"
+          className="bg-white rounded-2xl p-5 text-center shadow-lg border border-pink-100"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: index * 0.1, duration: 0.3 }}
         >
-          <div className={`w-10 h-10 rounded-xl ${stat.bgColor} flex items-center justify-center mx-auto mb-2`}>
-            <stat.icon className={`w-5 h-5 ${stat.color}`} />
+          <div className={`w-12 h-12 rounded-xl ${stat.bgColor} flex items-center justify-center mx-auto mb-3`}>
+            <stat.icon className={`w-6 h-6 ${stat.color}`} />
           </div>
-          <div className="font-bold text-xl text-foreground">{stat.value}</div>
-          <div className="text-xs text-muted-foreground">{stat.label}</div>
+          <div className="font-bold text-2xl text-gray-800">{stat.value}</div>
+          <div className="text-xs text-gray-600 font-medium mt-1">{stat.label}</div>
         </motion.div>
       ))}
     </motion.div>

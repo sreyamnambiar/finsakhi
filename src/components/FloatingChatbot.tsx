@@ -32,12 +32,6 @@ export const FloatingChatbot = () => {
     }
   }, [messages, isOpen, isMinimized]);
 
-  useEffect(() => {
-    if (isOpen && !isMinimized) {
-      geminiChat.startChat(messages.filter(m => m.role === 'user' || m.role === 'assistant'));
-    }
-  }, [isOpen]);
-
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
 
